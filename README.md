@@ -52,6 +52,9 @@ This project implements an end-to-end **big data pipeline** for processing and a
   <p><em>Complete data pipeline from MIMIC-III dataset to healthcare insights</em></p>
 </div>
 
+## 📁 Documentation
+For detailed setup and execution instructions, see the [User Manual](DOC/USER_MANUAL.pdf).
+
 ## 📁 Project File Structure
 
 ```healthcare-data-pipeline/
