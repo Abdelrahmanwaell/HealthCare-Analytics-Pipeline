@@ -54,51 +54,43 @@ This project implements an end-to-end **big data pipeline** for processing and a
 
 ## 📁 Project File Structure
 
-📁 (Project Root)/
-├── 📄 README.md                   # Main project documentation
-├── 📂 DOC/                        # Documentation and outputs
-│   ├── 📄 Architechture.jpg       # System architecture diagram
-│   └── 📄 USER_MANUAL.pdf         # User manual for the pipeline
-│
-├── 📂 Data/                       # All data assets
-│   ├── 📂 processed-data/         # Cleaned and processed data
-│   │   ├── 📄 Admissions.csv
-│   │   ├── 📄 CUSTAYS.csv
-│   │   ├── 📄 CUSTAYS.parquet
-│   │   ├── 📂 admissions_parquet/     # Parquet-formatted data
-│   │   ├── 📂 diagnoses_lcd_parquet/  # Parquet-formatted data
-│   │   ├── 📄 patients.csv
-│   │   └── 📄 patients.parquet
-│   │
-│   └── 📂 raw-data/               # Original source data
-│       ├── 📄 ADMISSIONS.csv
-│       ├── 📄 DIAGNOSES_ICD.csv
-│       ├── 📄 CUSTAYS.csv
-│       ├── 📄 LICENSE.txt
-│       ├── 📄 PATIENTS.csv
-│       └── 📄 SHA256SUMS.txt
-│
-├── 📂 hive/                       # Hive-related files
-│
-├── 📂 hive-queries/               # Hive query scripts
-│   └── 📄 hive-queries.txt
-│
-├── 📂 hive-table/                 # Table creation scripts
-│   └── 📄 create_table.txt
-│
-├── 📂 MapReduce/                  # MapReduce components
-│
-├── 📂 avg_classes/                # MapReduce implementation
-│   ├── 📄 AverageAge$AgeMapper.class
-│   ├── 📄 AverageAge$AverageReducer.class
-│   ├── 📄 AverageAge.class
-│   ├── 📄 AverageAge.java         #MapReduce java script
-    ├── 📄 part-r-00000            #MapReduce output
-│   └── 📄 average_age.jar
-│
-└── 📂 python/                     # Data processing scripts
-    ├── 📄 ICUstays.ipynb          # Jupyter notebook for ICU stays
-    ├── 📄 admission.ipynb         # Jupyter notebook for admissions
-    ├── 📄 clean.py                # Data cleaning script
-    ├── 📄 diagnoses.ipynb         # Jupyter notebook for diagnoses
-    └── 📄 patients.ipynb          # Jupyter notebook for patients           
+```healthcare-data-pipeline/
+├── README.md
+├── DOC/
+│   ├── Architechture.jpg
+│   └── USER_MANUAL.pdf
+├── Data/
+│   ├── processed-data/
+│   │   ├── Admissions.csv
+│   │   ├── CUSTAYS.csv
+│   │   ├── CUSTAYS.parquet
+│   │   ├── admissions_parquet/
+│   │   ├── diagnoses_lcd_parquet/
+│   │   ├── patients.csv
+│   │   └── patients.parquet
+│   └── raw-data/
+│       ├── ADMISSIONS.csv
+│       ├── DIAGNOSES_ICD.csv
+│       ├── CUSTAYS.csv
+│       ├── LICENSE.txt
+│       ├── PATIENTS.csv
+│       └── SHA256SUMS.txt
+├── hive/
+├── hive-queries/
+│   └── hive-queries.txt
+├── hive-table/
+│   └── create_table.txt
+├── MapReduce/
+│   └── avg_classes/
+│       ├── AverageAge$AgeMapper.class
+│       ├── AverageAge$AverageReducer.class
+│       ├── AverageAge.class
+│       ├── AverageAge.java 
+│       ├── part-r-00000 
+│       └── average_age.jar
+└── python/
+    ├── ICUstays.ipynb
+    ├── admission.ipynb
+    ├── clean.py
+    ├── diagnoses.ipynb
+    └── patients.ipynb
