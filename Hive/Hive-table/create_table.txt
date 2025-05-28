@@ -1,0 +1,83 @@
+CREATE EXTERNAL TABLE ADMISSIONS (
+    row_id BIGINT,
+    subject_id BIGINT,
+    hadm_id BIGINT,
+    admittime TIMESTAMP,
+    dischtime TIMESTAMP,
+    deathtime TIMESTAMP,
+    admission_type STRING,
+    admission_location STRING,
+    discharge_location STRING,
+    insurance STRING,
+    language STRING,
+    religion STRING,
+    marital_status STRING,
+    ethnicity STRING,
+    edregtime TIMESTAMP,
+    edouttime TIMESTAMP,
+    diagnosis STRING,
+    hospital_expire_flag BOOLEAN,
+    has_chartevents_data BOOLEAN,
+    los_days_hos BIGINT,
+    admit_date TIMESTAMP,
+    discharge_date TIMESTAMP
+)
+STORED AS PARQUET
+LOCATION '/user/hive/warehouse/newdata/admission_data/'
+TBLPROPERTIES (
+  'parquet.compress'='SNAPPY',
+  'parquet.validation'='STRICT'
+);
+
+
+
+CREATE EXTERNAL TABLE PATIENT (
+  row_id BIGINT,
+  subject_id BIGINT,
+  gender STRING,
+  dob TIMESTAMP,
+  dod TIMESTAMP,
+  dod_hosp TIMESTAMP,
+  dod_ssn TIMESTAMP,
+  expire_flag INT
+)
+STORED AS PARQUET
+LOCATION '/user/hive/warehouse/newdata/patient_data/'
+TBLPROPERTIES (
+  'parquet.compress'='SNAPPY',
+  'parquet.validation'='STRICT'
+);
+
+
+ CREATE EXTERNAL TABLE DIAGNOSE_ICD (
+  row_id BIGINT,
+  subject_id BIGINT,
+  hadm_id BIGINT,
+  seq_num BIGINT,
+  icd9_code STRING
+)
+STORED AS PARQUET
+LOCATION '/user/hive/warehouse/newdata/diagnoses_data/'
+TBLPROPERTIES (
+  'parquet.compress'='SNAPPY',
+  'parquet.validation'='STRICT'
+);
+
+
+
+CREATE EXTERNAL TABLE ICUSTAYS (
+    row_id BIGINT,
+    subject_id BIGINT,
+    hadm_id BIGINT,
+    icustay_id BIGINT,
+    intime TIMESTAMP,
+    outtime TIMESTAMP,
+    los_hours BIGINT
+)
+STORED AS PARQUET
+LOCATION '/user/hive/warehouse/newdata/icustay_data/'
+TBLPROPERTIES (
+  'parquet.compress'='SNAPPY',
+  'parquet.validation'='STRICT'
+);
+

@@ -1,0 +1,144 @@
+
+# Hive Queries
+
+---
+
+## ▪ Average Length of Stay per Diagnosis
+
+
+SELECT 
+  d.icd9_code,
+  AVG(DATEDIFF(a.dischtime, a.admittime)) AS avg_length_of_stay
+FROM 
+  admission a
+JOIN 
+  diagnoses_icd d ON a.hadm_id = d.hadm_id
+GROUP BY 
+  d.icd9_code
+ORDER BY 
+  avg_length_of_stay DESC;
+
+
+---
+
+## ▪ Distribution of ICU Readmissions
+
+
+SELECT 
+  readmit_flag,
+  COUNT(*) AS num_patients
+FROM (
+    SELECT 
+        subject_id,
+        hadm_id,
+        COUNT(icustay_id) AS icu_visits,
+        CASE 
+            WHEN COUNT(icustay_id) > 1 THEN 'Readmitted'
+            ELSE 'Single Stay'
+        END AS readmit_flag
+    FROM 
+        icustays
+    GROUP BY 
+        subject_id, hadm_id
+) t
+GROUP BY 
+  readmit_flag;
+```
+
+---
+
+## ▪ Mortality Rates by Gender and Ethnicity
+
+
+SELECT 
+    p.gender,
+    a.ethnicity,
+    COUNT(*) AS total_admissions,
+    SUM(CASE WHEN a.hospital_expire_flag THEN 1 ELSE 0 END) AS deaths,
+    ROUND(100 * SUM(CASE WHEN a.hospital_expire_flag THEN 1 ELSE 0 END) / COUNT(*), 2) AS mortality_rate
+FROM ADMISSIONS a
+JOIN PATIENT p ON a.subject_id = p.subject_id
+GROUP BY p.gender, a.ethnicity
+ORDER BY mortality_rate DESC;
+
+
+---
+
+## ▪ Patients with Multiple ICU Stays
+
+SELECT 
+  subject_id,
+  COUNT(icustay_id) AS icu_stays
+FROM 
+  icustays
+GROUP BY 
+  subject_id
+HAVING 
+  COUNT(icustay_id) > 1
+ORDER BY 
+  icu_stays DESC;
+
+
+---
+
+## ▪ Create Table for Patient Age
+
+
+CREATE EXTERNAL TABLE patients_age (
+    subject_id BIGINT,
+    gender STRING,
+    age INT ,
+    deathtime TIMESTAMP
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
+LOCATION '/user/hive/warehouse/newdata/age_data/';
+
+
+---
+
+## ▪ Insert Patient Age Data
+
+INSERT INTO TABLE patients_age
+SELECT
+    p.subject_id,
+    p.gender,	
+    floor(months_between(a.admittime, p.dob)/12) AS age,
+    a.deathtime
+FROM
+    patients p
+JOIN
+    admission a ON p.subject_id = a.subject_id;
+
+
+---
+
+## ▪ Create Temporary Table for Age Groups
+
+```
+CREATE TEMPORARY TABLE temp_age_groups AS
+SELECT *,
+  CASE
+    WHEN age < 18 THEN '0-17'
+    WHEN age BETWEEN 18 AND 39 THEN '18-39'
+    WHEN age BETWEEN 40 AND 64 THEN '40-64'
+    WHEN age BETWEEN 65 AND 79 THEN '65-79'
+    ELSE '80+'
+  END AS age_group
+FROM patients_age;
+```
+
+---
+
+## ▪ Mortality Rates by Age and Gender Groups
+
+
+SELECT
+  gender,
+  age_group,
+  COUNT(*) AS total_admissions,
+  SUM(CASE WHEN deathtime IS NOT NULL THEN 1 ELSE 0 END) AS num_deaths,
+  ROUND(SUM(CASE WHEN deathtime IS NOT NULL THEN 1 ELSE 0 END) / COUNT(*) * 100, 2) AS mortality_rate_pct
+FROM temp_age_groups;
+```
